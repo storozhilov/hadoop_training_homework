@@ -1,7 +1,9 @@
 #!/bin/sh
 
-classpath=${HADOOP_INSTALL}/share/hadoop/hdfs/hadoop-hdfs-2.7.1.jar
-classpath=${classpath}:${HADOOP_INSTALL}/share/hadoop/common/hadoop-common-2.7.1.jar
+hadoop_version=$(hadoop version|head -n 1|sed 's/Hadoop \([0-9\.]\+\)/\1/')
+
+classpath=${HADOOP_INSTALL}/share/hadoop/hdfs/hadoop-hdfs-${hadoop_version}.jar
+classpath=${classpath}:${HADOOP_INSTALL}/share/hadoop/common/hadoop-common-${hadoop_version}.jar
 
 if [ -d IPinYouCounter ] ; then
 	rm -Rf IPinYouCounter/*
