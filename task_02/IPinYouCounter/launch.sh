@@ -1,3 +1,3 @@
 #!/bin/sh
 
-hadoop jar IPinYouCounter.jar org.storozhilov.IPinYouCounter -Dpath.in=foo -Dpath.out=bar
+hadoop jar target/IPinYouCounter-1.0-SNAPSHOT.jar org.storozhilov.IPinYouCounter -D path.in=foo -D path.out=bar
