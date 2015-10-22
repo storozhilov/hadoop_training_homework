@@ -17,17 +17,15 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 public class WebBytesCount {
 
-    public static class WebBytesCountMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
+    public static class LogLine {
+	public String ip;
+	public int bytes;
+	public String userAgent;
 
-	private Text ip = new Text();
-	private IntWritable bytes = new IntWritable();
-	public static final String regexp = "([^\"^\\[]\\S*|\".+?\"|\\[.+?\\])\\s*";
-
-	@Override
-	protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-	    Matcher m = Pattern.compile(regexp).matcher(value.toString());
+	public LogLine(String line) {
+	    Matcher m = Pattern.compile(regexp).matcher(line);
 	    m.find();
-	    ip.set(m.group(1));
+	    ip = m.group(1);
 	    m.find();
 	    m.find();
 	    m.find();
@@ -35,10 +33,28 @@ public class WebBytesCount {
 	    m.find();
 	    m.find();
 	    try {
-	        bytes.set(Integer.parseInt(m.group(1)));
+		bytes = Integer.parseInt(m.group(1));
 	    } catch (NumberFormatException e) {
-		bytes.set(0);
+		bytes = 0;
 	    }
+	    m.find();
+	    m.find();
+	    userAgent = m.group(1).replace("\"", "");
+	}
+
+	private static final String regexp = "([^\"^\\[]\\S*|\".+?\"|\\[.+?\\])\\s*";
+    }
+
+    public static class WebBytesCountMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
+
+	private Text ip = new Text();
+	private IntWritable bytes = new IntWritable();
+
+	@Override
+	protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+	    LogLine logLine = new LogLine(value.toString());
+	    ip.set(logLine.ip);
+	    bytes.set(logLine.bytes);
 	    context.write(ip, bytes);
 	}
     }

@@ -39,27 +39,12 @@ public class WebBytesCountTest
         assertTrue( true );
     }
 
-    public void testRegExp()
+    public void testLogLine()
     {
 	String s = "ip1 - - [24/Apr/2011:04:06:01 -0400] \"GET /~strabal/grease/photo9/927-3.jpg HTTP/1.1\" 200 40028 \"-\" \"Mozilla/5.0 (compatible; YandexImages/3.0; +http://yandex.com/bots)\"";
-	Matcher m = Pattern.compile(WebBytesCount.WebBytesCountMapper.regexp).matcher(s);
-	assertTrue(m.find());
-	assertEquals("ip1", m.group(1));
-	assertTrue(m.find());
-	assertEquals("-", m.group(1));
-	assertTrue(m.find());
-	assertEquals("-", m.group(1));
-	assertTrue(m.find());
-	assertEquals("[24/Apr/2011:04:06:01 -0400]", m.group(1));
-	assertTrue(m.find());
-	assertEquals("\"GET /~strabal/grease/photo9/927-3.jpg HTTP/1.1\"", m.group(1));
-	assertTrue(m.find());
-	assertEquals("200", m.group(1));
-	assertTrue(m.find());
-	assertEquals("40028", m.group(1));
-	assertTrue(m.find());
-	assertEquals("\"-\"", m.group(1));
-	assertTrue(m.find());
-	assertEquals("\"Mozilla/5.0 (compatible; YandexImages/3.0; +http://yandex.com/bots)\"", m.group(1));
+	WebBytesCount.LogLine logLine = new WebBytesCount.LogLine(s);
+	assertEquals("ip1", logLine.ip);
+	assertEquals(40028, logLine.bytes);
+	assertEquals("Mozilla/5.0 (compatible; YandexImages/3.0; +http://yandex.com/bots)", logLine.userAgent);
     }
 }
