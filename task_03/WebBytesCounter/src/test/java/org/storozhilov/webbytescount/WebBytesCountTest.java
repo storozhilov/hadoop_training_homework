@@ -4,9 +4,6 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
  * Unit test for simple App.
  */

@@ -17,7 +17,7 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 public class WebBytesCount {
 
@@ -113,6 +113,11 @@ public class WebBytesCount {
 	public int hashCode() {
 	    return amount.hashCode() * 163 + totalBytes.hashCode();
 	}
+
+	@Override
+	public String toString() {
+	    return Double.toString(Double.valueOf(totalBytes.get()) / Double.valueOf(amount.get())) + "," + Integer.toString(totalBytes.get());
+	}
     }
 
     public static class WebBytesCountMapper extends Mapper<LongWritable, Text, Text, IpData> {
@@ -148,15 +153,17 @@ public class WebBytesCount {
 
     public static void main(String[] args) throws Exception {
 	Configuration conf = new Configuration();
+	conf.set("mapreduce.output.textoutputformat.separator", ",");
 	Job job = Job.getInstance(conf, "Web bytes count");
 	job.setJarByClass(WebBytesCount.class);
 	job.setMapperClass(WebBytesCountMapper.class);
-	//job.setCombinerClass(WebBytesReducer.class);
+	job.setCombinerClass(WebBytesReducer.class);
 	job.setReducerClass(WebBytesReducer.class);
 	job.setOutputKeyClass(Text.class);
 	job.setOutputValueClass(IpData.class);
+	job.setOutputFormatClass(TextOutputFormat.class);
 	FileInputFormat.addInputPath(job, new Path(args[0]));
-	FileOutputFormat.setOutputPath(job, new Path(args[1]));
+	TextOutputFormat.setOutputPath(job, new Path(args[1]));
 	System.exit(job.waitForCompletion(true) ? 0 : 1);
     }
 }
