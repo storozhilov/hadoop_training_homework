@@ -1,0 +1,33 @@
+CREATE EXTERNAL TABLE flights (
+	Year INT,
+	Month INT,
+	DayofMonth INT,
+	DayOfWeek INT,
+	DepTime STRING,
+	CRSDepTime STRING,
+	ArrTime STRING,
+	CRSArrTime STRING,
+	UniqueCarrier STRING,
+	FlightNum STRING,
+	TailNum STRING,
+	ActualElapsedTime INT,
+	CRSElapsedTime INT,
+	AirTime INT,
+	ArrDelay INT,
+	DepDelay INT,
+	Origin STRING,
+	Dest STRING,
+	Distance INT,
+	TaxiIn INT,
+	TaxiOut INT,
+	Cancelled BOOLEAN,
+	CancellationCode STRING,
+	Diverted BOOLEAN,
+	CarrierDelay INT,
+	WeatherDelay INT,
+	NASDelay INT,
+	SecurityDelay INT,
+	LateAircraftDelay INT)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+STORED AS TEXTFILE LOCATION '/home/illy/hive/task_01/input/flights'
+TBLPROPERTIES ("skip.header.line.count"="1");
